@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-5 my-2 w-70 p-5 rounded-3 bg bg-dark border border-light border-2 shadow-lg bg-body-tertiary rounded">
+    <div align="center">
+        <h1>Admin Dashboard</h1>
+        <p>მოგესალმებით, {{ current_user.username }}! მართეთ მომხმარებლები ქვემოთ:</p>
+    </div>
+    <div align="right">
+        <form class="btn-group" action="/Search">
+            <input name="n" class="form-control border border-dark">
+            <button class="btn btn-success">ძებნა</button>
+        </form>
+    </div>
+    <div class="row justify-content-left">
+        {% if users %}
+        {% for user in users %}
+        <div class="col-sm-12 col-md-6 col-lg-4 my-3">
+            <div class="card rounded bg-light shadow" style="width: 18rem; height: 16rem;">
+                <div class="card-body">
+                    <h5 class="card-title">სახელი - {{ user.username }}</h5>
+                    <p class="card-text">email - {{ user.email }}</p>
+                    <p class="card-text">როლი - {{ user.role }}</p>
+                    <p class="card-text">მომხმარებლის ID - {{ user.id }}</p>
+                    <div class="mt-auto border-secondary border-top">
+                        <form action="/change_role/{{ user.id }}" method="POST" class="d-inline me-2 mt-2 pb-2">
+                            <select name="new_role" class="form-select form-select-sm">
+                                <option value="User" {% if user.role==
+                                'User' %}selected{% endif %}>User</option>
+                                <option value="Admin" {% if user.role==
+                                'Admin' %}selected{% endif %}>Admin</option>
+                            </select>
+                            <button type="submit" class="btn btn-primary btn-sm mt-2">როლის შეცვლა</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+        {% else %}
+        <p>მომხმარებლები არ მოიძებნა.</p>
+        {% endif %}
+    </div>
+</div>
+
+{% endblock content %}

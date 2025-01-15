@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block content %}
+<form method="POST">
+    {{ form.hidden_tag() }}
+    <div class="container my-5 flex-grow-1 bg-light flex-grow-1" style="width: 50rem">
+            <label class="form-label">ბლოგის სახელი</label>
+            {{ form.title(class="form-control border border-dark border-2 shadow-lg bg-body-tertiary rounded",
+            placeholder=form.title.label.text) }}
+            <label class="form-label mt-3">ბლოგი</label>
+            {{ form.content(class="form-control border border-dark border-2 shadow-lg bg-body-tertiary rounded",
+            style="height: 25rem", placeholder=form.content.label.text) }}
+        <div class="pb-3 mt-3" align="center">
+            {{ form.post(class="btn btn-primary") }}
+        </div>
+    </div>
+</form>
+{% endblock content %}
