@@ -1,20 +1,45 @@
 {% extends "base.html" %}
 
 {% block content %}
+
 <div align="center">
     <div class="container mt-5 bg-light-subtle rounded-3 shadow-lg flex-grow-1">
         <h1>ბლოგები</h1>
+        <form method="GET" action="{{ url_for('blogs') }}" class="justify-content-left" style="width: 18rem;">
+            <select name="sort_by" class="form-select mb-3 border-secondary border-2 rounded" onchange="this.form.submit()">
+                <option value="recent" {% if sort_by=='recent' %}selected{% endif %}>ახალი</option>
+                <option value="most_liked" {% if sort_by=='most_liked' %}selected{% endif %}>ყველაზე მოწონებული</option>
+            </select>
+        </form>
         <div class="row justify-content-left">
             {% for blog in blogs %}
             <div class="col-sm-12 col-md-6 col-lg-4 my-3">
-                <div class="card rounded bg-light shadow" style="width: 16rem; height: 18rem;">
+                <div class="card rounded bg-light shadow" style="width: 16rem; height: 20rem;">
                     <div class="card-body">
                         <h5 class="card-title">{{ blog.title }}</h5>
+
+                        <div class="d-flex justify-content-center align-items-center gap-2">
+                            <p class="mt-2 mb-0">
+                                <strong>{{ blog.likes | length }} Likes</strong>
+                            </p>
+
+                            <form method="POST" action="{{ url_for('like_blog', blog_id=blog.id) }}" class="d-inline">
+                                <button type="submit" class="btn btn-outline-primary btn-sm">
+                                    {% if current_user.id in blog.likes | map(attribute='user_id') | list %}
+                                    Unlike
+                                    {% else %}
+                                    Like
+                                    {% endif %}
+                                </button>
+                            </form>
+                        </div>
+
                         <p class="card-text">{{ blog.content[:100] }}...</p>
                         <p class="text-muted">By {{ blog.author }}</p>
                         <div class="mt-auto border-secondary border-top">
                             {% if current_user.role == "Admin" %}
-                            <form method="POST" class="d-inline me-2 mt-2 pb-2">
+                            <form action="{{ url_for('delete_blog', blog_id=blog.id) }}" method="POST"
+                                  class="d-inline me-2 mt-2 pb-2">
                                 <button type="submit" class="btn btn-danger btn-sm">Delete</button>
                             </form>
                             {% endif %}
@@ -25,9 +50,9 @@
                 </div>
             </div>
             {% endfor %}
-            {% if blogs|length == 0 %}
+            {% if blogs | length == 0 %}
             <div class="mt-5">
-                <p class="text-muted">No blogs available at the moment.</p>
+                <p class="text-muted">ბლოგები ვერ მოიძებნა.</p>
             </div>
             {% endif %}
         </div>
