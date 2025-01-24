@@ -110,7 +110,7 @@ def register():
                         email=form.email.data,
                         birth_date=form.birth_date.data,
                         password_hash=hashed_password,
-                        role="Admin")
+                        role="User")
         new_user.create()
         login_user(new_user)
         print(f"User {new_user.username} registered successfully")
